@@ -1,4 +1,3 @@
-
 import React, { FC } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from '../queries/clientQuery'

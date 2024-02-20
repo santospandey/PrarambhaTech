@@ -35,9 +35,9 @@ type Project {
     client: Client
 }
 type Query {
-    client(ids: [String]): [Client]
+    client(id: String): Client
     clients: [Client]
-    project(ids: [String]): [Project]
+    project(id: String): Project
     projects: [Project]
 }
 type Mutation {
@@ -49,15 +49,41 @@ type Mutation {
 
 const rootValue = {
     client(args) {
-        return Client.find({
-            '_id': { $in: args.ids }
+        return Client.findOne({
+            '_id': args.id
         })
     },
     clients: () => Client.find(),
-    project(args) {
-        return Project.find({
-            '_id': { $in: args.ids }
-        })
+    project: async (args) => {
+        const project =  await Project.findOne({
+            '_id': args.id
+        });
+
+        if(!project)
+            return {};
+
+        const clientId = project.clientId;
+        const client = await Client.findOne({
+            '_id': clientId
+        });
+        
+        if(!client)
+            return project;
+
+        const output = {
+            id: project.id,
+            clientId: project.clientId,
+            name: project.name,
+            description: project.description,
+            client: {
+                id: clientId,
+                name: client.name,
+                email: client.email,
+                phone: client.phone
+            }
+        }
+
+        return output;
     },
     projects: () => Project.find(),
     addClient: (args) => {
