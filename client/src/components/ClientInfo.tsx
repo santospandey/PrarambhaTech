@@ -1,6 +1,7 @@
 import React from "react";
 import { FaEnvelope, FaPhone, FaIdBadge } from "react-icons/fa"
 
+// @ts-ignore
 export default function ClientInfo({client}) {
 
   console.log("client ", client);

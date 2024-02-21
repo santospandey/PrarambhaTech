@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from './components/Header';
 import './App.css';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';

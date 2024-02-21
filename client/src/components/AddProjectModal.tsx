@@ -19,11 +19,6 @@ export default function AddProjectModal() {
         refetchQueries: [{ query: GET_PROJECTS }]
     });
 
-    // const [addClient] = useMutation(ADD_CLIENT, {
-    //     variables: { name: name, email: email, phone: phone },
-    //     refetchQueries: [{ query: GET_CLIENTS }]
-    // })
-
     const { loading, error, data } = useQuery(GET_CLIENTS);
 
     const onSubmit = (e: React.FormEvent) => {
@@ -79,7 +74,7 @@ export default function AddProjectModal() {
                                     <label className="form-label">Client</label>
                                     <select id="client" className="form-select" value={clientId} onChange={(e) => setClientId(e.target.value)}>
                                         <option value="">Select Client</option>
-                                        {data.clients.map(client => <option key={client.id} value={client.id}>{client.name}</option>)}
+                                        {data.clients.map((client:any) => <option key={client.id} value={client.id}>{client.name}</option>)}
                                     </select>
                                 </div>
                                 <button type="submit" data-bs-dismiss="modal" className="btn btn-primary">Submit</button>

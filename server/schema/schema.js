@@ -20,6 +20,12 @@ input ProjectInput {
     description: String
     status: String
 }
+input ProjectUpdateInput {
+    id: String
+    name: String
+    description: String
+    status: String
+}
 type Client {
     id: String
     name: String
@@ -44,6 +50,7 @@ type Mutation {
     addClient(input: ClientInput): Client
     deleteClient(id: String): String
     addProject(input: ProjectInput): Project
+    updateProject(input: ProjectUpdateInput): Project
     deleteProject(id: String): String
 }`);
 
@@ -107,6 +114,12 @@ const rootValue = {
             description: args.input.description,
             status: args.input.status,
         }).save();
+    },
+    updateProject: (args) => {
+        return Project.findOneAndUpdate(
+            {_id: args.input.id},
+            {name: args.input.name, status: args.input.status, description: args.input.description}
+        );
     },
     deleteProject: (args) => {
         Project.deleteOne({ _id: args.id }).then((result) => {
