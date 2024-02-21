@@ -6,7 +6,7 @@ import { UPDATE_PROJECT } from '../mutations/projectMutation'
 
 
 // @ts-ignore
-export default function EditProjectForm({ project }) {
+export default function EditProjectForm({ project, setEdit }) {
     const [name, setName] = useState(project.name)
     const [description, setDescription] = useState(project.description)
     const [status, setStatus] = useState('')
@@ -49,7 +49,8 @@ export default function EditProjectForm({ project }) {
                     </select>
                 </div>
 
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button className="btn btn-primary mx-2" onClick={()=>setEdit(false)}>Cancel</button>
+                <button type="submit" className="btn btn-secondary mx-2">Update</button>
             </form>
         </div>
     )

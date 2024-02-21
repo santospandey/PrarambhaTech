@@ -5,9 +5,13 @@ import { GET_PROJECT } from '../queries/projectQuery'
 import ClientInfo from '../components/ClientInfo';
 import DeleteProjectButton from '../components/DeleteProjectButton';
 import EditProjectForm from '../components/EditProjectForm';
+import { FaEdit } from 'react-icons/fa';
+import { useState } from 'react';
 
 
 export default function Project() {
+    const [edit, setEdit] = useState(false);
+
     const { id } = useParams();
     const { loading, error, data } = useQuery(GET_PROJECT, {
         variables: { id: id }
@@ -26,9 +30,15 @@ export default function Project() {
 
                 {data.project.client && <ClientInfo client={data.project.client} />}
 
-                <EditProjectForm project={data.project} />
+                <div className='d-flex mt-5 ms-auto'>
+                    {!edit && <button className="btn btn-primary m-2" onClick={()=>setEdit(true)}>
+                        <FaEdit className='icon' /> Edit Project
+                    </button>}
+                    <DeleteProjectButton projectId={data.project.id} />
+                </div>
 
-                <DeleteProjectButton projectId={data.project.id} />
+                {edit && <EditProjectForm project={data.project} setEdit={setEdit} />}
+                
             </div>
         </>
     )
