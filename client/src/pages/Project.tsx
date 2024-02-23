@@ -23,7 +23,7 @@ export default function Project() {
     return (
         <>
             <div className="mx-auto w-75 card p-5">
-                <Link to="/" className="btn btn-light btn-sm w-25 d-inline ms-auto">Back</Link>
+                <Link to="/projects" className="btn btn-light btn-sm w-25 d-inline ms-auto">Back</Link>
                 <h1>{data.project.name}</h1>
                 <h5 className="mt-3">Project Status</h5>
                 <p className="lead">{data.project.status}</p>
@@ -31,14 +31,14 @@ export default function Project() {
                 {data.project.client && <ClientInfo client={data.project.client} />}
 
                 <div className='d-flex mt-5 ms-auto'>
-                    {!edit && <button className="btn btn-primary m-2" onClick={()=>setEdit(true)}>
+                    {!edit && <button className="btn btn-primary m-2" onClick={() => setEdit(true)}>
                         <FaEdit className='icon' /> Edit Project
                     </button>}
                     <DeleteProjectButton projectId={data.project.id} />
                 </div>
 
                 {edit && <EditProjectForm project={data.project} setEdit={setEdit} />}
-                
+
             </div>
         </>
     )

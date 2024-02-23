@@ -1,30 +1,63 @@
+import React, {useRef} from "react"
 import { useState } from "react"
 import { FaUser } from "react-icons/fa"
 import { useMutation } from "@apollo/client"
 import { ADD_CLIENT } from "../mutations/clientMutation"
 import { GET_CLIENTS } from "../queries/clientQuery"
+import FormInput from "./FormInput"
+import "./Components.css"
 
+const getInitialState = () => ([
+    {
+        id: 'name',
+        label: 'Name',
+        value: '',
+        type: "text",
+        required: true,
+        focused: false,
+        errorMsg: 'Please enter name',
+    },
+    {
+        id: 'email',
+        label: 'Email',
+        value: '',
+        type: "email",
+        required: true,
+        focused: false,
+        errorMsg: 'Please enter valid email for eg john@mail.com',
+    },
+    {
+        id: 'phone',
+        label: 'Phone',
+        value: '',
+        type: "text",
+        required: true,
+        focused: false,
+        errorMsg: 'Please enter 10 digit phone number',
+        pattern: "^[0-9]{10}$"
+    }
+]);
 
 export default function AddClientModal() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    const [states, setStates] = useState(getInitialState());
+    const formRef = useRef(null);
+
+    const resetForm = () => {
+        setStates(getInitialState());
+    }
 
     const [addClient] = useMutation(ADD_CLIENT, {
-        variables: { name: name, email: email, phone: phone },
+        variables: { name: states[0].value, email: states[1].value, phone: states[2].value },
         refetchQueries: [{ query: GET_CLIENTS }]
     })
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(name, email, phone);
-        if (!name && !email && !phone) {
-            return alert("Enter name, email, phone");
+        const target = e.target as HTMLButtonElement;
+        if (target.checkValidity()) {
+            addClient();
+            resetForm();
         }
-        addClient({variables: {name, email, phone}});
-        setName('');
-        setEmail('');
-        setPhone('');
     };
 
     return (
@@ -36,28 +69,19 @@ export default function AddClientModal() {
                 </div>
             </button>
 
-            <div className="modal fade" id="addClientModal" aria-labelledby="addClientModalLabel" aria-hidden="true">
+            <div className="modal fade" id="addClientModal" data-bs-backdrop="static" data-keyboard="false" aria-labelledby="addClientModalLabel" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="addClientModalLabel">Add Client</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => resetForm()}></button>
                         </div>
                         <div className="modal-body">
                             <form onSubmit={onSubmit}>
-                                <div className="mb-3">
-                                    <label className="form-label">Name</label>
-                                    <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input type="'text'" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Phone</label>
-                                    <input type="'text'" className="form-control" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                                </div>
-                                <button type="submit" data-bs-dismiss="modal" className="btn btn-secondary">Submit</button>
+                                {states.map((state, index, arr) => (
+                                    <FormInput state={state} states={arr} setStates={setStates} key={state.id} />
+                                ))}
+                                <button type="submit" className="btn btn-secondary submit-btn">Submit</button>
                             </form>
                         </div>
                     </div>

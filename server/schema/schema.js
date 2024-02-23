@@ -82,6 +82,7 @@ const rootValue = {
             clientId: project.clientId,
             name: project.name,
             description: project.description,
+            status: project.status,
             client: {
                 id: clientId,
                 name: client.name,
