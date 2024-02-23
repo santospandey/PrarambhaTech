@@ -22,9 +22,6 @@ export default function EditProjectForm({ project, setEdit }) {
     })
 
     const onSubmit = () => {
-        if(!name || !description || !status){
-            return alert("Please fill all the fields");
-        }
         updateProject();
     }
 
