@@ -4,7 +4,6 @@ import { FaList } from "react-icons/fa"
 import { useMutation, useQuery } from "@apollo/client"
 import { GET_PROJECTS } from "../queries/projectQuery"
 import { GET_CLIENTS } from "../queries/clientQuery"
-import Spinner from "./Spinner"
 import { ADD_PROJECT } from '../mutations/projectMutation'
 
 

@@ -12,6 +12,6 @@
     display: none;
 }
 
-input:invalid ~ .form-input{
+.acm-input:invalid[autofocus] ~ .form-input{
     display: block;
 }
