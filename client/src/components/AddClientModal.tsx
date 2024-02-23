@@ -3,6 +3,7 @@ import { FaUser } from "react-icons/fa"
 import { useMutation } from "@apollo/client"
 import { ADD_CLIENT } from "../mutations/clientMutation"
 import { GET_CLIENTS } from "../queries/clientQuery"
+import FormInput from "./FormInput"
 import "./Components.css"
 
 const getInitialState = () => ([
@@ -75,37 +76,9 @@ export default function AddClientModal() {
                         </div>
                         <div className="modal-body">
                             <form onSubmit={onSubmit} noValidate>
-                                {states.map(state => (
-                                    <div className="mb-3" key={state.id}>
-                                        <label className="form-label">{state.label}</label>
-                                        <input type={state.type} className="form-control acm-input" id={state.id}
-                                            value={state.value}
-                                            onChange={(e) => {
-                                                const newStates = states.map((_temp) => {
-                                                    if (_temp.id == state.id) {
-                                                        return { ..._temp, value: e.target.value }
-                                                    }
-                                                    return _temp;
-                                                })
-                                                setStates(newStates)
-                                            }}
-                                            required={state.required}
-                                            autoFocus={state.focused}
-                                            onBlur={() => {
-                                                const newStates = states.map((_temp) => {
-                                                    if (_temp.id == state.id) {
-                                                        return { ..._temp, focused: true }
-                                                    }
-                                                    return _temp;
-                                                })
-                                                setStates(newStates)
-                                            }}
-                                            pattern={state.pattern}
-                                        />
-                                        <span className="text-danger form-input">{state.errorMsg}</span>
-                                    </div>
+                                {states.map((state, index, arr) => (
+                                    <FormInput state={state} states={arr} setStates={setStates} key={state.id}/>
                                 ))}
-
                                 <button type="submit" className="btn btn-secondary">Submit</button>
                             </form>
                         </div>
