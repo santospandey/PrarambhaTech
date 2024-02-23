@@ -8,10 +8,10 @@ export default function Home() {
         <>
             <div className="d-flex gap-3 mb-4">
                 <AddClientModal />
-                <AddProjectModal />
+                {/* <AddProjectModal /> */}
             </div>
-            <Projects />
-            <hr />
+            {/* <Projects /> */}
+            {/* <hr /> */}
             <Clients />
         </>
     )
