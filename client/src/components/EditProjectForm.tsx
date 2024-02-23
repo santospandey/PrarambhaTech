@@ -9,8 +9,8 @@ import { UPDATE_PROJECT } from '../mutations/projectMutation'
 export default function EditProjectForm({ project, setEdit }) {
     const [name, setName] = useState(project.name)
     const [description, setDescription] = useState(project.description)
-    const [status, setStatus] = useState('')
-    
+    const [status, setStatus] = useState(project.status)
+
     const [updateProject] = useMutation(UPDATE_PROJECT, {
         variables: {
             id: project.id,
@@ -27,6 +27,8 @@ export default function EditProjectForm({ project, setEdit }) {
         }
         updateProject();
     }
+
+    const isProjectSame = () => name===project.name && description === project.description && status === project.status;
 
     return (
         <div className='mt-5'>
@@ -50,7 +52,7 @@ export default function EditProjectForm({ project, setEdit }) {
                 </div>
 
                 <button className="btn btn-primary mx-2" onClick={()=>setEdit(false)}>Cancel</button>
-                <button type="submit" className="btn btn-secondary mx-2">Update</button>
+                <button type="submit" className="btn btn-secondary mx-2" disabled={isProjectSame()}>Update</button>
             </form>
         </div>
     )

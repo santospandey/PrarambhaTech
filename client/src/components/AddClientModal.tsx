@@ -1,3 +1,4 @@
+import React, {useRef} from "react"
 import { useState } from "react"
 import { FaUser } from "react-icons/fa"
 import { useMutation } from "@apollo/client"
@@ -8,8 +9,8 @@ import "./Components.css"
 
 const getInitialState = () => ([
     {
-        label: 'Name',
         id: 'name',
+        label: 'Name',
         value: '',
         type: "text",
         required: true,
@@ -17,8 +18,8 @@ const getInitialState = () => ([
         errorMsg: 'Please enter name',
     },
     {
-        label: 'Email',
         id: 'email',
+        label: 'Email',
         value: '',
         type: "email",
         required: true,
@@ -26,8 +27,8 @@ const getInitialState = () => ([
         errorMsg: 'Please enter valid email for eg john@mail.com',
     },
     {
-        label: 'Phone',
         id: 'phone',
+        label: 'Phone',
         value: '',
         type: "text",
         required: true,
@@ -39,6 +40,7 @@ const getInitialState = () => ([
 
 export default function AddClientModal() {
     const [states, setStates] = useState(getInitialState());
+    const formRef = useRef(null);
 
     const resetForm = () => {
         setStates(getInitialState());
@@ -72,14 +74,14 @@ export default function AddClientModal() {
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="addClientModalLabel">Add Client</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => resetForm()}></button>
                         </div>
                         <div className="modal-body">
-                            <form onSubmit={onSubmit} noValidate>
+                            <form onSubmit={onSubmit}>
                                 {states.map((state, index, arr) => (
-                                    <FormInput state={state} states={arr} setStates={setStates} key={state.id}/>
+                                    <FormInput state={state} states={arr} setStates={setStates} key={state.id} />
                                 ))}
-                                <button type="submit" className="btn btn-secondary">Submit</button>
+                                <button type="submit" className="btn btn-secondary submit-btn">Submit</button>
                             </form>
                         </div>
                     </div>
