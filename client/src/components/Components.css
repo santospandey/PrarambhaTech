@@ -18,3 +18,11 @@
 .apm-input:invalid[autofocus] ~ .form-input{
     display: block;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.orange {
+    background: orange;
+}

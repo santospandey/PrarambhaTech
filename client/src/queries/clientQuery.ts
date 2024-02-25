@@ -1,12 +1,18 @@
 import { gql } from "@apollo/client";
 
 const GET_CLIENTS = gql`
-    query getClients {
-        clients {
-            id
-            name
-            email
-            phone
+    query getClients($limit: Int, $page: Int) {
+        clients(limit: $limit, page: $page) {
+            data {
+                id
+                name
+                email
+                phone
+            }
+            page {
+                current
+                total
+            }
         }
     }
 `

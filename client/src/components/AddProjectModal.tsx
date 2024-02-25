@@ -75,7 +75,7 @@ export default function AddProjectModal() {
                                     <label className="form-label">Client</label>
                                     <select id={clientId.id} className="form-select apm-input" value={clientId.value} onChange={(e) => setClientId({ ...clientId, value: e.target.value })} required={clientId.required} autoFocus={clientId.focused} onBlur={()=> setClientId({...clientId, focused: true})}>
                                         <option value="">Select Client</option>
-                                        {data.clients.map((client: any) => <option key={client.id} value={client.id}>{client.name}</option>)}
+                                        {data.clients.data.map((client: any) => <option key={client.id} value={client.id}>{client.name}</option>)}
                                     </select>
                                     <span className="text-danger form-input">{clientId.errorMsg}</span>
                                 </div>

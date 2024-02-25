@@ -9,7 +9,7 @@ export default function FormInput({ state, states, setStates }) {
                 value={state.value}
                 onChange={(e) => {
                     const newStates = states.map((_temp: any) => {
-                        if (_temp.id == state.id) {
+                        if (_temp.id === state.id) {
                             return { ..._temp, value: e.target.value }
                         }
                         return _temp;
@@ -20,7 +20,7 @@ export default function FormInput({ state, states, setStates }) {
                 autoFocus={state.focused}
                 onBlur={() => {
                     const newStates = states.map((_temp: any) => {
-                        if (_temp.id == state.id) {
+                        if (_temp.id === state.id) {
                             return { ..._temp, focused: true }
                         }
                         return _temp;
