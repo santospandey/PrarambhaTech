@@ -26,3 +26,7 @@
 .orange {
     background: orange;
 }
+
+.client-table > thead > tr > th:hover {
+    
+}

@@ -75,7 +75,7 @@ const rootValue = {
     clients: async (args) => {
         const {page, limit, query} = args;
         let search = {};
-        if(query.trim()){
+        if(query){
             const regex = new RegExp(query, 'i');
             search['name'] = regex;
         }
@@ -83,7 +83,7 @@ const rootValue = {
         const clients = page === null || limit === null ? await Client.find({...search}) : await Client.find({...search}).limit(limit).skip(startIndex);
         const result = {};
         result['data'] = clients;
-        result['page'] = page === null || limit === null ? {} : {
+        result['page'] = (!page || !limit) ? {} : {
             current: page,
             total: Math.ceil(await Client.countDocuments()/limit)
         }

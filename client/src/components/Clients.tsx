@@ -1,10 +1,12 @@
+import './Components.css'
 import React, { FC, ReactEventHandler, useEffect, useState } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from '../queries/clientQuery'
 import ClientRow from './ClientRow';
 import { Client } from '../models/Client';
 import Spinner from './Spinner';
-import './Components.css'
+import Downarrow  from './assets/Downarrow';
+import Uparrow from './assets/Uparrow'
 
 const Clients: FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -13,13 +15,18 @@ const Clients: FC = () => {
     const [query, setQuery] = useState('');
     const [lastPage, setLastPage] = useState(1);
     const [searchName, setSearchName] = useState('');
+    const [clients, setClients] = useState<any[]>([]);
+    const [sortAttribute, setSortAttribute] = useState('');
+    const [ascending, setAscending] = useState(false);
+    const [select, setSelect] = useState('');
 
     const { loading, error, data } = useQuery(GET_CLIENTS, {
-        variables: { page: currentPage, limit: limit, query: query}
+        variables: { page: currentPage, limit: limit, query: query }
     });
 
     useEffect(() => {
         if (data) {
+            setClients(data.clients.data);
             setLastPage(data.clients.page.total);
             const arr = Array.from({ length: data.clients.page.total }, (_, i) => i + 1)
             setPages(arr);
@@ -33,6 +40,20 @@ const Clients: FC = () => {
         return () => clearTimeout(id);
     }, [searchName]);
 
+    const sortBy = (attribute: string) => {
+        setSortAttribute(attribute);
+        const sortedClients = [...clients].sort((a, b) => {
+            if (a[attribute] < b[attribute]) {
+                return ascending ? 1 : -1
+            } else if (a[attribute] > b[attribute]) {
+                return ascending ? -1 : 1;
+            }
+            return 0;
+        });
+        setClients(sortedClients);
+        setAscending(!ascending);
+    }
+
     if (loading) return <Spinner />
     if (error) return <p>Something went wrong</p>
     return (
@@ -40,17 +61,17 @@ const Clients: FC = () => {
             <input type='text' value={searchName} placeholder='Search by name' onChange={(e) => setSearchName(e.target.value)}></input>
 
             {!loading && !error &&
-                [<table className="table table-hover mt-3" key="clients-table">
+                [<table className="table table-hover mt-3 client-table" key="clients-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
+                            <th className='cursor-pointer' onClick={() => sortBy('name')} onMouseEnter={()=> setSelect('name')} onMouseLeave={()=>setSelect('')}>Name {select==='name' && (!ascending ? <Uparrow /> : <Downarrow />)}</th>
+                            <th className='cursor-pointer' onClick={() => sortBy('email')} onMouseEnter={()=> setSelect('email')} onMouseLeave={()=>setSelect('')}>Email {select === 'email' && (!ascending ? <Uparrow /> : <Downarrow />)}</th>
+                            <th className='cursor-pointer' onClick={() => sortBy('phone')} onMouseEnter={()=> setSelect('phone')} onMouseLeave={()=>setSelect('')}>Phone {select === 'phone' && (!ascending ? <Uparrow /> : <Downarrow />)}</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data && data.clients && data.clients.data && data.clients.data.map((client: Client) => (
+                        {clients.map((client: Client) => (
                             <ClientRow key={client.id} client={client} />
                         ))}
                     </tbody>
