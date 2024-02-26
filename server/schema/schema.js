@@ -54,7 +54,7 @@ type ProjectResult {
 }
 type Query {
     client(id: String): Client
-    clients(page: Int, limit: Int): ClientResult
+    clients(page: Int, limit: Int, query: String): ClientResult
     project(id: String): Project
     projects(page: Int, limit: Int): ProjectResult
 }
@@ -73,12 +73,17 @@ const rootValue = {
         })
     },
     clients: async (args) => {
-        const {page, limit} = args;
+        const {page, limit, query} = args;
+        let search = {};
+        if(query.trim()){
+            const regex = new RegExp(query, 'i');
+            search['name'] = regex;
+        }
         const startIndex = (page-1)*limit;    
-        const clients = Object.keys(args).length===0 ? await Client.find() : await Client.find().limit(limit).skip(startIndex);
+        const clients = page === null || limit === null ? await Client.find({...search}) : await Client.find({...search}).limit(limit).skip(startIndex);
         const result = {};
         result['data'] = clients;
-        result['page'] = Object.keys(args).length===0 ? {} : {
+        result['page'] = page === null || limit === null ? {} : {
             current: page,
             total: Math.ceil(await Client.countDocuments()/limit)
         }

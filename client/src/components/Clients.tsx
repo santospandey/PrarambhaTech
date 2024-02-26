@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, ReactEventHandler, useEffect, useState } from 'react';
 import { useQuery } from "@apollo/client";
 import { GET_CLIENTS } from '../queries/clientQuery'
 import ClientRow from './ClientRow';
@@ -10,10 +10,12 @@ const Clients: FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [pages, setPages] = useState([1, 2, 3]);
+    const [query, setQuery] = useState('');
     const [lastPage, setLastPage] = useState(1);
+    const [searchName, setSearchName] = useState('');
 
     const { loading, error, data } = useQuery(GET_CLIENTS, {
-        variables: { page: currentPage, limit: limit }
+        variables: { page: currentPage, limit: limit, query: query}
     });
 
     useEffect(() => {
@@ -22,12 +24,21 @@ const Clients: FC = () => {
             const arr = Array.from({ length: data.clients.page.total }, (_, i) => i + 1)
             setPages(arr);
         }
-    }, [data])
+    }, [data]);
+
+    useEffect(() => {
+        const id = setTimeout(() => {
+            setQuery(searchName);
+        }, 500);
+        return () => clearTimeout(id);
+    }, [searchName]);
 
     if (loading) return <Spinner />
     if (error) return <p>Something went wrong</p>
     return (
         <>
+            <input type='text' value={searchName} placeholder='Search by name' onChange={(e) => setSearchName(e.target.value)}></input>
+
             {!loading && !error &&
                 [<table className="table table-hover mt-3" key="clients-table">
                     <thead>
