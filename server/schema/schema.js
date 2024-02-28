@@ -60,7 +60,7 @@ type Query {
 }
 type Mutation {
     addClient(input: ClientInput): Client
-    deleteClient(id: String): String
+    deleteClient(id: String): Client
     addProject(input: ProjectInput): Project
     updateProject(input: ProjectUpdateInput): Project
     deleteProject(id: String): String
@@ -139,12 +139,16 @@ const rootValue = {
             phone: args.input.phone
         }).save();
     },
-    deleteClient: (args) => {
-        Client.deleteOne({ _id: args.id }).then((result) => {
-            console.log('Deleted document:', result);
-        }).catch((error) => {
-            console.error('Error deleting document:', error);
-        });
+    deleteClient: async (args) => {
+        const client = await Client.findOne({'_id': args.id});
+        if(!client){
+            return null;
+        }
+        const result = await Client.deleteOne({ _id: args.id });
+        if(result && result.deletedCount > 0){
+            return client;
+        }
+        return null;
     },
     addProject: (args) => {
         return new Project({

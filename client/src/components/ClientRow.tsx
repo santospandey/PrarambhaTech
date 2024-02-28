@@ -7,12 +7,20 @@ import { GET_CLIENTS } from '../queries/clientQuery';
 
 interface ClientRowProps {
   client: Client;
+  clients: Client[],
+  setClients: Function
 }
 
-const ClientRow: FC<ClientRowProps> = ({ client }) => {
+const ClientRow: FC<ClientRowProps> = ({ client, clients, setClients }) => {
   const [deleteClient] = useMutation(DELETE_CLIENT, {
     variables: { id: client.id },
-    refetchQueries: [{ query: GET_CLIENTS }],
+    onCompleted: (result) => {
+      const {deleteClient} = result;
+      const filteredClients = clients.filter((_client) => {
+        return _client.id.localeCompare(deleteClient.id) != 0
+      })
+      setClients(filteredClients);
+    }
   });
 
   return (
