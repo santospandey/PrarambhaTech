@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client"
 import { ADD_CLIENT } from "../mutations/clientMutation"
 import { GET_CLIENTS } from "../queries/clientQuery"
 import FormInput from "./FormInput"
+import Toast from "./Toast"
 import "./Components.css"
 
 const getInitialState = () => ([
@@ -38,9 +39,16 @@ const getInitialState = () => ([
     }
 ]);
 
-export default function AddClientModal() {
+type Props = {
+    currentPage: number,
+    limit: number,
+    setClients: Function,
+    clients: any[]
+};
+
+const AddClientModal:React.FC<Props> = ({currentPage, limit, setClients, clients}) => {
     const [states, setStates] = useState(getInitialState());
-    const formRef = useRef(null);
+    const [message, setMessage] = useState('');
 
     const resetForm = () => {
         setStates(getInitialState());
@@ -48,7 +56,10 @@ export default function AddClientModal() {
 
     const [addClient] = useMutation(ADD_CLIENT, {
         variables: { name: states[0].value, email: states[1].value, phone: states[2].value },
-        refetchQueries: [{ query: GET_CLIENTS }]
+        onCompleted: (data) => {
+            setClients([...clients, {...data.addClient}]);
+            setMessage('Successfully added client');
+        }
     })
 
     const onSubmit = (e: React.FormEvent) => {
@@ -62,6 +73,7 @@ export default function AddClientModal() {
 
     return (
         <>
+            <Toast message={message}/>
             <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addClientModal">
                 <div className="d-flex align-items-center">
                     <FaUser className="icon" />
@@ -90,3 +102,5 @@ export default function AddClientModal() {
         </>
     )
 }
+
+export default AddClientModal;

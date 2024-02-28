@@ -1,11 +1,17 @@
 import { gql } from "@apollo/client";
 
 const GET_PROJECTS = gql`
-    query getProjects {
-        projects { 
-            id
-            name
-            status
+    query getProjects($limit: Int, $page: Int) {
+        projects(limit: $limit, page: $page) { 
+            data { 
+                id
+                name
+                status
+            }
+            page {
+                current
+                total
+            }
         }
     }
 `

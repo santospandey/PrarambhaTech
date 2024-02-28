@@ -7,16 +7,29 @@ import { GET_PROJECTS } from "../queries/projectQuery"
 import { GET_CLIENTS } from "../queries/clientQuery"
 import { ADD_PROJECT } from '../mutations/projectMutation'
 import { nameState, descriptionState, statusState, clientIdState, statusData } from './data/AddProjectModalData'
+import Toast from './Toast'
 
-export default function AddProjectModal() {
+type Props = {
+    currentPage: number,
+    limit: number,
+    setProjects: Function,
+    projects: any[]
+};
+
+const AddProjectModal:React.FC<Props> = ({currentPage, limit, setProjects, projects}) => {
     const [name, setName] = useState(nameState);
     const [description, setDescription] = useState(descriptionState);
     const [status, setStatus] = useState(statusState);
     const [clientId, setClientId] = useState(clientIdState);
+    const [message, setMessage] = useState('');
 
     const [addProject] = useMutation(ADD_PROJECT, {
-        variables: { name: name.value, description: description.value, clientId: clientId.value, status: status.value },
-        refetchQueries: [{ query: GET_PROJECTS }]
+        variables: { name: name.value, description: description.value, clientId: clientId.value, status: status.value },        
+        onCompleted: (data) => {
+            const {id, description, name, status} = data.addProject;
+            setProjects([...projects, {id, name, description, status}]);
+            setMessage('Successfully added project');
+        }
     });
 
     const { loading, error, data } = useQuery(GET_CLIENTS);
@@ -38,6 +51,7 @@ export default function AddProjectModal() {
 
     return (
         <>
+            <Toast message={message}/>
             <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProjectModal">
                 <div className="d-flex align-items-center">
                     <FaList className="icon" />
@@ -75,7 +89,7 @@ export default function AddProjectModal() {
                                     <label className="form-label">Client</label>
                                     <select id={clientId.id} className="form-select apm-input" value={clientId.value} onChange={(e) => setClientId({ ...clientId, value: e.target.value })} required={clientId.required} autoFocus={clientId.focused} onBlur={()=> setClientId({...clientId, focused: true})}>
                                         <option value="">Select Client</option>
-                                        {data.clients.map((client: any) => <option key={client.id} value={client.id}>{client.name}</option>)}
+                                        {data.clients.data.map((client: any) => <option key={client.id} value={client.id}>{client.name}</option>)}
                                     </select>
                                     <span className="text-danger form-input">{clientId.errorMsg}</span>
                                 </div>
@@ -88,3 +102,5 @@ export default function AddProjectModal() {
         </>
     )
 }
+
+export default AddProjectModal;
