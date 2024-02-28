@@ -7,14 +7,18 @@ import { Client } from '../models/Client';
 import Spinner from './Spinner';
 import Downarrow  from './assets/Downarrow';
 import Uparrow from './assets/Uparrow'
+import AddClientModal from './AddClientModal';
 
-const Clients: FC = () => {
+type Props = {
+    [key: string]: string;
+};
+
+const Clients: React.FC<Props> = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [pages, setPages] = useState([1, 2, 3]);
     const [query, setQuery] = useState('');
     const [lastPage, setLastPage] = useState(1);
-    const [searchName, setSearchName] = useState('');
     const [clients, setClients] = useState<any[]>([]);
     const [sortAttribute, setSortAttribute] = useState('');
     const [ascending, setAscending] = useState(false);
@@ -33,12 +37,12 @@ const Clients: FC = () => {
         }
     }, [data]);
 
-    useEffect(() => {
+    useEffect(()=>{
         const id = setTimeout(() => {
-            setQuery(searchName);
+            setQuery(props.searchName);
         }, 500);
         return () => clearTimeout(id);
-    }, [searchName]);
+    }, [props]);
 
     const sortBy = (attribute: string) => {
         setSortAttribute(attribute);
@@ -58,8 +62,7 @@ const Clients: FC = () => {
     if (error) return <p>Something went wrong</p>
     return (
         <>
-            <input type='text' value={searchName} placeholder='Search by name' onChange={(e) => setSearchName(e.target.value)}></input>
-
+            <AddClientModal limit={limit} currentPage={currentPage} setClients={setClients} clients={clients}/>
             {!loading && !error &&
                 [<table className="table table-hover mt-3 client-table" key="clients-table">
                     <thead>
