@@ -75,7 +75,7 @@ const Clients: React.FC<Props> = (props) => {
                     </thead>
                     <tbody>
                         {clients.map((client: Client) => (
-                            <ClientRow key={client.id} client={client} />
+                            <ClientRow key={client.id} client={client} clients={clients} setClients={setClients}/>
                         ))}
                     </tbody>
                 </table>,

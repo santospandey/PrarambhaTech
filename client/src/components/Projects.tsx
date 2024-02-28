@@ -7,7 +7,7 @@ import AddProjectModal from "./AddProjectModal"
 
 export default function Projects() {
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(6);
     const [pages, setPages] = useState([1, 2, 3]);
     const [lastPage, setLastPage] = useState(1);
     const [projects, setProjects] = useState([]);
