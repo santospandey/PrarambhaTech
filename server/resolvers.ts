@@ -99,16 +99,22 @@ const resolvers = {
       }).save();
     },
     updateProject: async (_, args) => {
+      console.log("update project ", args);
       return await Project.findOneAndUpdate(
         { _id: args.input.id },
         { name: args.input.name, status: args.input.status, description: args.input.description }
       );
     },
     deleteProject: async (_, args) => {
-      return await Project.deleteOne({ _id: args.id }).then((result) => {
-      }).catch((error) => {
-        console.error('Error deleting document:', error);
-      });
+      const project = await Project.findOne({'_id': args.id});
+      if(!project){
+        return null;
+      }
+      const result = Project.deleteOne({ _id: args.id });
+      if(result && (await result).deletedCount > 0){
+        return project;
+      }
+      return null;
     }
   }
 }

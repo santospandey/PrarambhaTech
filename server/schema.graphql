@@ -48,9 +48,9 @@ type Query {
     projects(page: Int, limit: Int): ProjectResult
 }
 type Mutation {
-    addClient(client: ClientInput): Client
+    addClient(input: ClientInput): Client
     deleteClient(id: ID): Client
     addProject(input: ProjectInput): Project
     updateProject(input: ProjectUpdateInput): Project
-    deleteProject(id: ID): String
+    deleteProject(id: ID): Project
 }
