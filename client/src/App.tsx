@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import './App.css';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
@@ -8,13 +8,12 @@ import Notfound from './pages/Notfound';
 import Project from './pages/Project';
 import ProjectsPage from './pages/ProjectsPage';
 
-
-const client = new ApolloClient({
-  uri: 'http://localhost:5100/_graphql',
-  cache: new InMemoryCache(),
-});
-
 function App() {
+  const client = new ApolloClient({
+    uri: process.env.REACT_APP_SERVER_URI,
+    cache: new InMemoryCache(),
+  });
+  
   return (
     <>
       <ApolloProvider client={client}>

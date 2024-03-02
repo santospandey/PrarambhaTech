@@ -1,0 +1,56 @@
+input ClientInput {
+    name: String
+    email: String
+    phone: String
+}
+input ProjectInput {
+    clientId: ID
+    name: String
+    description: String
+    status: String
+}
+input ProjectUpdateInput {
+    id: ID!
+    name: String
+    description: String
+    status: String
+}
+type Client {
+    id: ID!
+    name: String
+    email: String
+    phone: String
+}
+type Page {    
+    current: Int
+    total: Int
+}
+type ClientResult {
+    page: Page
+    data: [Client]
+}
+type Project {
+    id: ID!
+    clientId: ID
+    name: String
+    description: String
+    status: String
+    client: Client
+}
+type ProjectResult {
+    page: Page
+    data: [Project]
+}
+type Query {
+    client(id: ID): Client
+    clients(page: Int, limit: Int, query: String): ClientResult
+    project(id: ID): Project
+    projects(page: Int, limit: Int): ProjectResult
+}
+type Mutation {
+    addClient(input: ClientInput): Client
+    deleteClient(id: ID): Client
+    addProject(input: ProjectInput): Project
+    updateProject(input: ProjectUpdateInput): Project
+    deleteProject(id: ID): Project
+}
