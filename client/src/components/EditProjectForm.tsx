@@ -18,7 +18,8 @@ export default function EditProjectForm({ project, setEdit }) {
             description,
             status
         },
-        refetchQueries: [{query: GET_PROJECT, variables: {id: project.id}}]
+        refetchQueries: [{query: GET_PROJECT, variables: {id: project.id}}],
+        onCompleted: ()=>setEdit(false)
     })
 
     const onSubmit = () => {
@@ -30,7 +31,7 @@ export default function EditProjectForm({ project, setEdit }) {
     return (
         <div className='mt-5'>
             <h3>Update Project Details</h3>
-            <form onSubmit={()=>onSubmit()}>
+            <form onSubmit={(event)=>{event.preventDefault(); onSubmit()}}>
                 <div className="mb-3">
                     <label className="form-label">Name</label>
                     <input type="text" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} />
